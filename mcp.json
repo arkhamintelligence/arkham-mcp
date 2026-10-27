@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "arkham": {
+      "type": "http",
+      "url": "https://mcp.arkm.com/mcp",
+      "auth": { "CLIENT_ID": "cursor" }
+    }
+  }
+}

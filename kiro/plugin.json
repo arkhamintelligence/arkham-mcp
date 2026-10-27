@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "arkham",
+  "version": "1.0.0",
+  "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
+  "author": { "name": "Arkham Intelligence", "email": "api@arkm.com", "url": "https://arkm.com" },
+  "homepage": "https://arkm.com/api/docs",
+  "repository": "https://github.com/arkhamintelligence/arkham-mcp",
+  "license": "MIT",
+  "keywords": ["blockchain", "crypto", "onchain", "wallet", "address", "token", "transfers", "polymarket", "arkham"]
+}

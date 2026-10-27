@@ -1,0 +1,8 @@
+{
+  "name": "arkham",
+  "description": "Arkham Intelligence plugins for Claude Code.",
+  "owner": { "name": "Arkham Intelligence", "email": "api@arkm.com" },
+  "plugins": [
+    { "name": "arkham", "source": "./", "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket." }
+  ]
+}

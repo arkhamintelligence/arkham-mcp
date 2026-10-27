@@ -1,0 +1,15 @@
+{
+  "name": "arkham",
+  "displayName": "Arkham",
+  "version": "1.0.0",
+  "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
+  "author": { "name": "Arkham Intelligence", "email": "api@arkm.com" },
+  "publisher": "Arkham Intelligence",
+  "homepage": "https://arkm.com/api/docs",
+  "repository": "https://github.com/arkhamintelligence/arkham-mcp",
+  "license": "MIT",
+  "logo": "assets/arkham-icon-dark-512.png",
+  "keywords": ["blockchain", "crypto", "onchain", "intelligence", "polymarket", "mcp"],
+  "category": "integrations",
+  "mcpServers": "./mcp.json"
+}

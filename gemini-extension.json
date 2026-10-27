@@ -1,0 +1,9 @@
+{
+  "name": "arkham",
+  "version": "1.0.0",
+  "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
+  "mcpServers": {
+    "arkham": { "httpUrl": "https://mcp.arkm.com/mcp" }
+  },
+  "contextFileName": "GEMINI.md"
+}

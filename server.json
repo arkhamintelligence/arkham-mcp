@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.arkm/mcp",
+  "title": "Arkham",
+  "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
+  "version": "1.0.0",
+  "websiteUrl": "https://arkm.com/api/docs",
+  "icons": [
+    { "src": "https://arkm.com/arkham_logo.svg", "mimeType": "image/svg+xml", "sizes": ["any"] }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.arkm.com/mcp"
+    },
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.arkm.com/",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer <ARKHAM_API_KEY>. Create a key at https://arkm.com/api-dashboard?tab=api-keys.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
