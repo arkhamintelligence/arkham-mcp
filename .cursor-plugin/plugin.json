@@ -1,7 +1,7 @@
 {
   "name": "arkham",
   "displayName": "Arkham",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
   "author": { "name": "Arkham Intelligence", "email": "api@arkm.com" },
   "publisher": "Arkham Intelligence",

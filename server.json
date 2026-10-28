@@ -3,10 +3,21 @@
   "name": "com.arkm/mcp",
   "title": "Arkham",
   "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://arkm.com/api/docs",
+  "repository": {
+    "url": "https://github.com/arkhamintelligence/arkham-mcp",
+    "source": "github",
+    "id": "1436099687"
+  },
   "icons": [
-    { "src": "https://arkm.com/arkham_logo.svg", "mimeType": "image/svg+xml", "sizes": ["any"] }
+    {
+      "src": "https://arkm.com/arkham_logo.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
   ],
   "remotes": [
     {

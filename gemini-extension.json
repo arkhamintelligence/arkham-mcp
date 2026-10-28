@@ -1,6 +1,6 @@
 {
   "name": "arkham",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
   "mcpServers": {
     "arkham": { "httpUrl": "https://mcp.arkm.com/mcp" }
