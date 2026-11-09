@@ -57,7 +57,7 @@ The tools read data, and write only to your own alerts, labels and private entit
 | [`.cursor-plugin/`](.cursor-plugin), [`mcp.json`](mcp.json) | Cursor plugin |
 | [`gemini-extension.json`](gemini-extension.json), [`GEMINI.md`](GEMINI.md) | Gemini CLI extension |
 | [`kiro/`](kiro) | Kiro power |
-| [`assets/`](assets) | Square icons (dark and light) at 400, 512 and 1024 px, with SVG sources |
+| [`assets/`](assets) | Square PNG icons (dark and light) at 400, 512 and 1024 px |
 
 Every manifest carries the same `version`; bump them together on a release and tag it.
 
