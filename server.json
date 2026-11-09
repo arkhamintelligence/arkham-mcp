@@ -3,7 +3,7 @@
   "name": "com.arkm/mcp",
   "title": "Arkham",
   "description": "Arkham blockchain intelligence: entities, labels, balances, transfers, tokens and Polymarket.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "websiteUrl": "https://arkm.com/api/docs",
   "repository": {
     "url": "https://github.com/arkhamintelligence/arkham-mcp",
@@ -23,18 +23,6 @@
     {
       "type": "streamable-http",
       "url": "https://mcp.arkm.com/mcp"
-    },
-    {
-      "type": "streamable-http",
-      "url": "https://mcp.arkm.com/",
-      "headers": [
-        {
-          "name": "Authorization",
-          "description": "Bearer <ARKHAM_API_KEY>. Create a key at https://arkm.com/api-dashboard?tab=api-keys.",
-          "isRequired": true,
-          "isSecret": true
-        }
-      ]
     }
   ]
 }

@@ -34,13 +34,7 @@ You sign in with your Arkham account: the client opens Arkham, you create a key 
 | **Kiro** | **Powers → Add Custom Power → Import power from GitHub**, `https://github.com/arkhamintelligence/arkham-mcp/tree/main/kiro` |
 | **VS Code, ChatGPT and others** | Add a remote MCP server with the URL `https://mcp.arkm.com/mcp`. The client registers itself, so Arkham's sign-in page shows its name as an unverified app. |
 
-### Use an API key instead of signing in
-
-Any client that can send a header can use a key from the [API Dashboard](https://arkm.com/api-dashboard?tab=api-keys):
-
-```
-Authorization: Bearer YOUR_API_KEY
-```
+To connect with an API key you already have instead of signing in, follow the [MCP Server guide](https://arkm.com/api/docs) for your client.
 
 ## Access and credits
 
