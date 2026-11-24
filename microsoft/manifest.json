@@ -1,0 +1,42 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.30/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.30",
+  "version": "1.0.0",
+  "id": "ab78b917-10d7-48ca-bc0a-9deebf1225e9",
+  "developer": {
+    "name": "Arkham Intelligence",
+    "websiteUrl": "https://arkm.com",
+    "privacyUrl": "https://arkm.com/privacy-policy",
+    "termsOfUseUrl": "https://arkm.com/api-terms-of-service"
+  },
+  "name": {
+    "short": "Arkham Intelligence",
+    "full": "Arkham Intelligence: blockchain intelligence"
+  },
+  "description": {
+    "short": "Who is behind a wallet, what it holds, and how its funds moved, on 16 chains.",
+    "full": "Ask who is behind any wallet, how money moved, and what an entity holds. Arkham attributes on-chain activity to real-world entities (exchanges, funds, market makers, individuals) across 16 chains, including Ethereum, Bitcoin, Solana, Tron and Base. This connector gives Copilot Arkham's intelligence directly: addresses, entities, balances, transfers, transactions, counterparties, tokens, risk scores, Hyperliquid (HyperCore) positions and Polymarket data. Every tool is read-only: the connector looks things up and never moves funds, places trades or changes the user's Arkham account. Users sign in with their Arkham account, and calls draw on the same API credits as Arkham's API."
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "accentColor": "#000000",
+  "agentConnectors": [
+    {
+      "id": "arkham",
+      "displayName": "Arkham Intelligence",
+      "description": "Answers questions about blockchain wallets, entities, transfers, transactions, tokens, risk scores, Hyperliquid positions and Polymarket, using Arkham's attribution of on-chain activity to real-world entities. Read-only.",
+      "toolSource": {
+        "remoteMcpServer": {
+          "mcpServerUrl": "https://mcp.arkm.com/mcp/core",
+          "mcpToolDescription": { "file": "mcptools.json" },
+          "authorization": {
+            "type": "AzureKeyVault",
+            "referenceId": "https://arkham-copilot.vault.azure.net/"
+          }
+        }
+      }
+    }
+  ]
+}

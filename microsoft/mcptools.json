@@ -1,0 +1,4169 @@
+{
+  "tools": [
+    {
+      "name": "GetAddressBalances",
+      "title": "Get token balances for an address",
+      "description": "Get token balances for an address\n\nReturns token balances for the specified address, optionally filtered by chains.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The blockchain address to query balances for.",
+                "examples": [
+                  "0x28C6c06298d514Db089934071355E5743bf21d60"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns balances across all supported chains."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get token balances for an address"
+      }
+    },
+    {
+      "name": "GetAddressCounterParty",
+      "title": "Get top counterparties for an address",
+      "description": "Get top counterparties for an address\n\nReturns aggregated counterparty activity by volume for the specified address.\n\nRequires counterparties.read for all supported queries, including time ranges, incoming/outgoing direction, and filtering.\n\n**Rate Limit**: This endpoint has a stricter rate limit of 1 request per second.\n\nCosts 50 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "ApiCounterpartyFlow": {
+            "enum": [
+              "in",
+              "out"
+            ],
+            "type": "string"
+          },
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The address to query counterparties for. A comma-separated list is also accepted \u2014 their counterparties are aggregated (per-counterparty volume summed across the listed addresses).",
+                "examples": [
+                  "0x28C6c06298d514Db089934071355E5743bf21d60"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'base,bsc'). If omitted, returns counterparties across all supported chains."
+              },
+              "flow": {
+                "$ref": "#/$defs/ApiCounterpartyFlow",
+                "description": "Transfer direction. Only \"in\" or \"out\" are accepted (omit for both directions)."
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results to return. Default: 20. Max: 1000.",
+                "examples": [
+                  10
+                ],
+                "maximum": 1000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "tags": {
+                "description": "List of counterparty tags to filter by. Pass several as a single comma-separated value (e.g. 'whale,kol').",
+                "examples": [
+                  [
+                    "whale",
+                    "kol"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "timeGte": {
+                "description": "Filter to activity after this time. Accepts RFC 3339, Unix seconds/ms, or YYYY-MM-DD.",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive. It cannot be combined with timeGte or timeLte.",
+                "examples": [
+                  "24h"
+                ],
+                "type": "string"
+              },
+              "timeLte": {
+                "description": "Filter to activity before this time. Accepts RFC 3339, Unix seconds/ms, or YYYY-MM-DD.",
+                "examples": [
+                  "2024-06-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tokens": {
+                "description": "Matches counterparties involving any of these token addresses or token IDs. Pass several as a single comma-separated value (e.g. 'ethereum,0xA0b86991\u2026').",
+                "examples": [
+                  [
+                    "ethereum",
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "usdGte": {
+                "description": "Filter to counterparties whose aggregated USD volume is at least this value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get top counterparties for an address"
+      }
+    },
+    {
+      "name": "GetAddressFlow",
+      "title": "Get historical USD flows for an address",
+      "description": "Get historical USD flows for an address\n\nReturns historical USD inflows, outflows, and cumulative totals for the specified address across supported chains. Daily UTC buckets sum historical USD transfer values across the selected address/entity boundary, excluding internal movements. Fees and rewards are included only when represented as transfers. Solana matching includes token-account owners. Bitcoin-family operations with any selected counterparty on the opposing side are excluded, including mixed counterparties. Gaps between matching days are zero-filled; the current day may be incomplete. Cumulative totals end at the previous day. Successful results are refreshed after five minutes; during refresh failures the last successful result may be served for up to 24 hours. X-Arkham-Cached-At reports when the result was computed.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The blockchain address to query flow data for.",
+                "examples": [
+                  "0x28C6c06298d514Db089934071355E5743bf21d60"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns data across all supported chains."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get historical USD flows for an address"
+      }
+    },
+    {
+      "name": "GetAddressIntelligence",
+      "title": "Get intelligence about an address",
+      "description": "Get intelligence about an address\n\nReturns intelligence data for the specified address, including entity associations, labels, and contract status.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The blockchain address to query.",
+                "examples": [
+                  "0x28C6c06298d514Db089934071355E5743bf21d60"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chain": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Blockchain network to query. Only one network is used: if multiple values are provided, only the first applies. If omitted, the best chain is auto-detected across all supported chains."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get intelligence about an address"
+      }
+    },
+    {
+      "name": "GetAddressIntelligenceEnriched",
+      "title": "Get intelligence about an address with additional address information",
+      "description": "Get intelligence about an address with additional address information\n\nReturns the same intelligence as /intelligence/address/{address}, plus the address's tags and cluster IDs. Tags, cluster IDs and the predicted entity are each included by default; use the include parameters to leave any of them out.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The blockchain address to query.",
+                "examples": [
+                  "0x28C6c06298d514Db089934071355E5743bf21d60"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chain": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Blockchain network to query. Only one network is used: if multiple values are provided, only the first applies. If omitted, the best chain is auto-detected across all supported chains."
+              },
+              "includeClusters": {
+                "description": "Whether to include cluster IDs in the response. Defaults to 'true'.",
+                "examples": [
+                  "true"
+                ],
+                "type": "string"
+              },
+              "includeEntityPredictions": {
+                "description": "Whether to include entity predictions in the response. A predicted entity is returned only for an address that has no known entity. Defaults to 'true'.",
+                "examples": [
+                  "true"
+                ],
+                "type": "string"
+              },
+              "includeTags": {
+                "description": "Whether to include address tags in the response. Defaults to 'true'.",
+                "examples": [
+                  "true"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get intelligence about an address with additional address information"
+      }
+    },
+    {
+      "name": "GetAddressPortfolioHistory",
+      "title": "Get address portfolio history",
+      "description": "Get address portfolio history\n\nRetrieves historical portfolio snapshots for the specified address across chains, for the UTC day containing the given time. The response is keyed by chain, then by token pricing ID.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The blockchain address to query portfolio history for.",
+                "examples": [
+                  "0x28C6c06298d514Db089934071355E5743bf21d60"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns data across all supported chains."
+              },
+              "time": {
+                "description": "Unix timestamp in milliseconds for the historical snapshot. The time is truncated to the start of the UTC day.",
+                "examples": [
+                  "1704067200000"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "time"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path",
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get address portfolio history"
+      }
+    },
+    {
+      "name": "GetAllAddressIntelligence",
+      "title": "Get all intelligence about an address across chains",
+      "description": "Get all intelligence about an address across chains\n\nReturns multi-chain intelligence for the provided address, with data for each supported chain where the address format is valid.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The blockchain address to query across all compatible chains.",
+                "examples": [
+                  "0x28C6c06298d514Db089934071355E5743bf21d60"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get all intelligence about an address across chains"
+      }
+    },
+    {
+      "name": "GetBatchAddressIntelligence",
+      "title": "Batch lookup address intelligence",
+      "description": "Batch lookup address intelligence\n\nReturns intelligence for up to 1000 addresses in a single request. Send a POST body with an `addresses` array of blockchain addresses. Use `chain` to look every address up on one network, or `chains` to narrow which networks are considered when each address's network is detected. Addresses that cannot be parsed are omitted from the response.\n\nCosts 250 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "ApiBatchAddressRequest": {
+            "properties": {
+              "addresses": {
+                "description": "Array of blockchain addresses to query (max 1000). Supports EVM, Solana, Bitcoin, Tron, and other address formats.",
+                "examples": [
+                  [
+                    "0x28C6c06298d514Db089934071355E5743bf21d60"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "addresses"
+            ],
+            "type": "object"
+          },
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "body": {
+            "$ref": "#/$defs/ApiBatchAddressRequest",
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chain": {
+                "$ref": "#/$defs/BlockchainChain",
+                "description": "Single blockchain network to filter all addresses to. Takes precedence over 'chains'. If omitted, auto-detects per address."
+              },
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Networks to consider when auto-detecting each address's network, as a single comma-separated value (e.g. 'ethereum,bsc'). Ignored when 'chain' is set."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "body"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Batch lookup address intelligence"
+      }
+    },
+    {
+      "name": "GetEntityBalanceChanges",
+      "title": "Get entity balance changes",
+      "description": "Get entity balance changes\n\nReturns a ranked list of entities with their balance changes over a specified time interval. Filter by chain, entity type, token, and balance thresholds. Useful for tracking which entities are accumulating or distributing assets.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "IntelligenceEntityBalanceChangesInterval": {
+            "enum": [
+              "7d",
+              "14d",
+              "30d"
+            ],
+            "type": "string"
+          },
+          "IntelligenceEntityBalanceChangesOrderBy": {
+            "enum": [
+              "balanceUsd",
+              "balanceUsdChange",
+              "balanceUsdPctChange",
+              "balanceUnit",
+              "balanceUnitChange",
+              "balanceUnitPctChange",
+              "balance_usd",
+              "balance_usd_change",
+              "balance_usd_pct_change",
+              "balance_unit",
+              "balance_unit_change",
+              "balance_unit_pct_change"
+            ],
+            "type": "string"
+          },
+          "IntelligenceEntityBalanceChangesOrderDir": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "balanceMax": {
+                "description": "Maximum balance threshold in USD to filter entities.",
+                "type": "integer"
+              },
+              "balanceMin": {
+                "description": "Minimum balance threshold in USD to filter entities.",
+                "type": "integer"
+              },
+              "chains": {
+                "description": "List of chains to filter by. Pass several as a single comma-separated value (e.g. 'ethereum,bitcoin').",
+                "items": {
+                  "$ref": "#/$defs/BlockchainChain"
+                },
+                "type": "array"
+              },
+              "entityIds": {
+                "description": "List of specific entity IDs to filter by. Pass several as a single comma-separated value (e.g. 'binance,coinbase'). IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  [
+                    "binance",
+                    "coinbase"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "entityTags": {
+                "description": "List of entity tags to include. Requires elevated access; requests using this parameter without it may return 403. Pass several as a single comma-separated value (e.g. 'hot-wallet,kol').",
+                "examples": [
+                  [
+                    "hot-wallet",
+                    "kol"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "entityTypes": {
+                "description": "List of entity types to filter by. Pass several as a single comma-separated value (e.g. 'cex,fund'). Valid types are listed by GET /intelligence/entity_types.",
+                "examples": [
+                  [
+                    "cex",
+                    "fund"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "interval": {
+                "$ref": "#/$defs/IntelligenceEntityBalanceChangesInterval",
+                "description": "Time interval for balance change calculation. One of '7d', '14d', or '30d'."
+              },
+              "limit": {
+                "description": "Number of results to return per page. Required; must be between 1 and 100.",
+                "examples": [
+                  10
+                ],
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "negatedEntityTags": {
+                "description": "List of entity tags to exclude. Requires elevated access; requests using this parameter without it may return 403. Pass several as a single comma-separated value (e.g. 'hot-wallet,kol').",
+                "examples": [
+                  [
+                    "hot-wallet",
+                    "kol"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "offset": {
+                "description": "Number of results to skip from the beginning.",
+                "type": "integer"
+              },
+              "orderBy": {
+                "$ref": "#/$defs/IntelligenceEntityBalanceChangesOrderBy",
+                "description": "Field to sort results by. One of: balanceUsd, balanceUsdChange, balanceUsdPctChange, balanceUnit, balanceUnitChange, balanceUnitPctChange."
+              },
+              "orderDir": {
+                "$ref": "#/$defs/IntelligenceEntityBalanceChangesOrderDir",
+                "description": "Sort direction: 'asc' for ascending or 'desc' for descending."
+              },
+              "pricingIds": {
+                "description": "List of CoinGecko pricing IDs to filter by. Pass several as a single comma-separated value (e.g. 'bitcoin,ethereum').",
+                "examples": [
+                  [
+                    "bitcoin",
+                    "ethereum"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "orderBy",
+              "orderDir",
+              "interval",
+              "limit"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get entity balance changes"
+      }
+    },
+    {
+      "name": "GetEntityBalances",
+      "title": "Get token balances for an entity",
+      "description": "Get token balances for an entity\n\nReturns token balances for the specified entity, optionally filtered by chains.\n\nCosts 5 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "The entity ID to query balances for. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "binance"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns balances across all supported chains."
+              },
+              "cheap": {
+                "description": "Has no effect. Balances are always current.",
+                "examples": [
+                  "true"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get token balances for an entity"
+      }
+    },
+    {
+      "name": "GetEntityCounterParty",
+      "title": "Get top counterparties for an entity",
+      "description": "Get top counterparties for an entity\n\nReturns aggregated counterparty activity by volume for the specified entity.\n\nRequires counterparties.read for all supported queries, including time ranges, incoming/outgoing direction, and filtering.\n\n**Rate Limit**: This endpoint has a stricter rate limit of 1 request per second.\n\nCosts 50 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "ApiCounterpartyFlow": {
+            "enum": [
+              "in",
+              "out"
+            ],
+            "type": "string"
+          },
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "The entity ID to query counterparties for. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "vitalik-buterin"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'base,bsc'). If omitted, returns counterparties across all supported chains."
+              },
+              "flow": {
+                "$ref": "#/$defs/ApiCounterpartyFlow",
+                "description": "Transfer direction. Only \"in\" or \"out\" are accepted (omit for both directions)."
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results to return. Default: 20. Max: 1000.",
+                "examples": [
+                  10
+                ],
+                "maximum": 1000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "tags": {
+                "description": "List of counterparty tags to filter by. Pass several as a single comma-separated value (e.g. 'whale,kol').",
+                "examples": [
+                  [
+                    "whale",
+                    "kol"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "timeGte": {
+                "description": "Filter to activity after this time. Accepts RFC 3339, Unix seconds/ms, or YYYY-MM-DD.",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive. It cannot be combined with timeGte or timeLte.",
+                "examples": [
+                  "24h"
+                ],
+                "type": "string"
+              },
+              "timeLte": {
+                "description": "Filter to activity before this time. Accepts RFC 3339, Unix seconds/ms, or YYYY-MM-DD.",
+                "examples": [
+                  "2024-06-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tokens": {
+                "description": "Matches counterparties involving any of these token addresses or token IDs. Pass several as a single comma-separated value (e.g. 'ethereum,0xA0b86991\u2026').",
+                "examples": [
+                  [
+                    "ethereum",
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "usdGte": {
+                "description": "Filter to counterparties whose aggregated USD volume is at least this value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get top counterparties for an entity"
+      }
+    },
+    {
+      "name": "GetEntityFlow",
+      "title": "Get historical USD flows for an entity",
+      "description": "Get historical USD flows for an entity\n\nReturns historical USD inflows, outflows, and cumulative totals for the specified entity across supported chains. Daily UTC buckets sum historical USD transfer values across the selected address/entity boundary, excluding internal movements. Fees and rewards are included only when represented as transfers. Solana matching includes token-account owners. Bitcoin-family operations with any selected counterparty on the opposing side are excluded, including mixed counterparties. Gaps between matching days are zero-filled; the current day may be incomplete. Cumulative totals end at the previous day. Successful results are refreshed after five minutes; during refresh failures the last successful result may be served for up to 24 hours. X-Arkham-Cached-At reports when the result was computed.\n\nCosts 3 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "The entity ID to query flow data for. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "binance"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bitcoin'). If omitted, returns data across all supported chains."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get historical USD flows for an entity"
+      }
+    },
+    {
+      "name": "GetEntityIntelligence",
+      "title": "Get intelligence about an entity",
+      "description": "Get intelligence about an entity\n\nReturns top-level entity information, including associated tags, social links, and metadata.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "The entity ID to query. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "binance"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get intelligence about an entity"
+      }
+    },
+    {
+      "name": "GetEntityPortfolioHistory",
+      "title": "Get entity portfolio history",
+      "description": "Get entity portfolio history\n\nRetrieves historical portfolio snapshots for the specified entity across chains, for the UTC day containing the given time. The response is keyed by chain, then by token pricing ID.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "The entity ID to query portfolio history for. Accepts an Arkham entity ID or a user entity ID. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "binance"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns data across all supported chains."
+              },
+              "time": {
+                "description": "Unix timestamp in milliseconds for the historical snapshot. The time is truncated to the start of the UTC day.",
+                "examples": [
+                  "1704067200000"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "time"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path",
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get entity portfolio history"
+      }
+    },
+    {
+      "name": "GetEntitySummary",
+      "title": "Get entity summary statistics",
+      "description": "Get entity summary statistics\n\nReturns summary statistics for the specified entity, including:\n- Total number of unique addresses (deduplicated across chains)\n- Total balance in USD across all chains\n- Total transfer volume in USD\n- First and last transfer timestamps\n\nSupports Arkham entities and user-created entities. When authenticated, user-added addresses are included for Arkham entities.\n\nFor Arkham entities, numAddresses is omitted unless the caller has the entities.address_count entitlement. User-created entity counts are always included.\n\n**Shareable user entities:** If a user entity is marked as shareable, any authenticated or unauthenticated user can access the summary.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "The entity ID to retrieve summary statistics for. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "binance"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get entity summary statistics"
+      }
+    },
+    {
+      "name": "GetHypercoreAccountSummary",
+      "title": "Get HyperCore account value summary",
+      "description": "Get HyperCore account value summary\n\nTotal account value for a HyperCore address, matching Hyperliquid's own account value: spot USD, staked HYPE and vault equity, plus perp equity where the account mode keeps perps separate from spot. A master address aggregates across all of its sub-accounts; a sub-account returns only its own value.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "HyperCore master or sub-account address.",
+                "examples": [
+                  "0xECB63caA47c7c4E77F60f1cE858Cf28dC2B82b00"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get HyperCore account value summary"
+      }
+    },
+    {
+      "name": "GetHypercoreEntityPerpPositions",
+      "title": "Get HyperCore entity perp positions",
+      "description": "Get HyperCore entity perp positions\n\nOpen perpetual positions across every address attributed to the entity, with mark price, unrealized PnL, and per-DEX USDC margin.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "Arkham entity ID. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "wintermute"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get HyperCore entity perp positions"
+      }
+    },
+    {
+      "name": "GetHypercoreEntitySummary",
+      "title": "Get HyperCore entity value summary",
+      "description": "Get HyperCore entity value summary\n\nTotal HyperCore value (spot USD, perp equity, staked HYPE and vault equity) aggregated across every address attributed to the entity, sub-accounts included.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity": {
+                "description": "Arkham entity ID. IDs are case-sensitive; look one up with GET /intelligence/search.",
+                "examples": [
+                  "wintermute"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get HyperCore entity value summary"
+      }
+    },
+    {
+      "name": "GetHypercorePerpPositions",
+      "title": "Get HyperCore perp positions",
+      "description": "Get HyperCore perp positions\n\nOpen perpetual positions for a HyperCore address (master + sub-accounts) with mark price, unrealized PnL, and per-DEX USDC margin.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "HyperCore master or sub-account address.",
+                "examples": [
+                  "0xECB63caA47c7c4E77F60f1cE858Cf28dC2B82b00"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get HyperCore perp positions"
+      }
+    },
+    {
+      "name": "GetHypercoreTrades",
+      "title": "Get HyperCore trade history",
+      "description": "Get HyperCore trade history\n\nMerged spot and perp fills for a HyperCore address (master + sub-accounts), newest first, paginated via limit/offset. Requires hypercore.read and either hypercore.explorer or hypercore.filter. offset + limit may not exceed the caller's hypercore.max_results, counting an omitted limit as its default of 50.\n\nCosts 2 API credits per row.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "HyperCore master or sub-account address.",
+                "examples": [
+                  "0x020ca66c30bec2c4fe3861a94e4db4a498a35872"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "default": 50,
+                "description": "Max fills to return (default 50, max 200).",
+                "examples": [
+                  50
+                ],
+                "maximum": 200,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Pagination offset into the merged fill history. Default: 0.",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get HyperCore trade history"
+      }
+    },
+    {
+      "name": "GetIntelUsage",
+      "title": "Get intel data usage for the current billing period",
+      "description": "Get intel data usage for the current billing period\n\nReturns your intel-data consumption for the current billing period, broken down by chain.\n\nUsage is tracked per seat (the calling user), not account-wide: `totalLimit` is the limit for your seat and `totalCount` is the data points your seat has consumed. The response also includes the start of the current period and the per-chain breakdown of usage.\n\nReturns 503 when usage tracking is unavailable.\n\nCosts 0 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "title": "Get intel data usage for the current billing period"
+      }
+    },
+    {
+      "name": "GetPolymarketEvent",
+      "title": "Get a Polymarket event",
+      "description": "Get a Polymarket event\n\nRequires predictions.read and either predictions.explorer or predictions.filter. Returns a single Polymarket event by its event ID, along with every active or resolved market in the event. Each market includes its outcomes, current Yes price, 24h volume, resolution status, resolution source, and on-chain question lifecycle. Returns 404 if the event does not exist.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "eventId": {
+                "description": "Required. Polymarket event ID.",
+                "examples": [
+                  30615
+                ],
+                "type": "integer"
+              }
+            },
+            "required": [
+              "eventId"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get a Polymarket event"
+      }
+    },
+    {
+      "name": "GetPolymarketEvents",
+      "title": "List Polymarket events",
+      "description": "List Polymarket events\n\nReturns a filtered, paginated list of Polymarket events, each with a few top-market previews and current prices. Set groupGames=true to represent each sporting fixture by its winner event.\n\nCosts 3 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "CommonPolymarketEventSortBy": {
+            "enum": [
+              "volume",
+              "endDate",
+              "createdAt"
+            ],
+            "type": "string"
+          },
+          "CommonSortDir": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "active": {
+                "description": "Optional. Filter to active events \u2014 not closed and not ended (true/false).",
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "excludeTag": {
+                "description": "Optional. Exclude events carrying this tag (case-insensitive).",
+                "examples": [
+                  "sports"
+                ],
+                "type": "string"
+              },
+              "groupGames": {
+                "description": "Optional. When true, return one winner event per sporting fixture instead of each related event. Default: false.",
+                "type": "boolean"
+              },
+              "limit": {
+                "default": 50,
+                "description": "Max events to return (1-100). Default: 50.",
+                "examples": [
+                  50
+                ],
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Pagination offset. Default: 0.",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              },
+              "order": {
+                "$ref": "#/$defs/CommonSortDir",
+                "description": "Sort order: asc or desc. Default: desc."
+              },
+              "search": {
+                "description": "Optional. Search event titles, market questions, and grouped-market titles.",
+                "examples": [
+                  "bitcoin"
+                ],
+                "type": "string"
+              },
+              "sortBy": {
+                "$ref": "#/$defs/CommonPolymarketEventSortBy",
+                "description": "Optional. Sort field: volume, endDate (resolution eligibility), or createdAt. Default: volume when no tag, endDate when tag is set."
+              },
+              "tag": {
+                "description": "Optional. Filter by event tag. Matches lowercase Polymarket tags case-insensitively.",
+                "examples": [
+                  "crypto"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "List Polymarket events"
+      }
+    },
+    {
+      "name": "GetPolymarketLeaderboard",
+      "title": "Polymarket PnL leaderboard",
+      "description": "Polymarket PnL leaderboard\n\nAll queries require predictions.read; an address-specific rank or standing also requires predictions.explorer or predictions.filter. Without predictions.filter, only descending order is available; preset periods and wallet-rank lookups remain available. offset + limit may not exceed the caller's predictions.max_results, counting an omitted limit as its default of 100. Returns the Polymarket leaderboard ordered by trading PnL plus rewards for a period: 1d, 1w, 1m, or all (default 1d). periodPnl remains trading-only, and periodRewards contains the reward component. Order desc for top traders or asc for worst. Pass an address to also receive that trader's rank.\n\nCosts 10 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "CommonPolymarketLeaderboardPeriod": {
+            "enum": [
+              "1d",
+              "1w",
+              "1m",
+              "all"
+            ],
+            "type": "string"
+          },
+          "CommonSortDir": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "Optional trade address. If set, also returns this user's rank.",
+                "examples": [
+                  "0xBDDF61Af533fF524D27154e589d2D7A81510C684"
+                ],
+                "type": "string"
+              },
+              "limit": {
+                "default": 100,
+                "description": "Max entries (1-200). Default: 100",
+                "examples": [
+                  100
+                ],
+                "maximum": 200,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Pagination offset (0-10000). Default: 0",
+                "examples": [
+                  0
+                ],
+                "maximum": 10000,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "order": {
+                "$ref": "#/$defs/CommonSortDir",
+                "description": "Sort order: desc (top traders) or asc (worst traders). Default: desc"
+              },
+              "period": {
+                "$ref": "#/$defs/CommonPolymarketLeaderboardPeriod",
+                "description": "Time period: 1d, 1w, 1m, all. Default: 1d"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Polymarket PnL leaderboard"
+      }
+    },
+    {
+      "name": "GetPolymarketPositions",
+      "title": "Polymarket user positions",
+      "description": "Polymarket user positions\n\nRequires predictions.read and either predictions.explorer or predictions.filter. Without predictions.filter, positions are available in default trades-descending order. offset + limit may not exceed the caller's predictions.max_results, counting an omitted limit as its default of 50. Returns a trade address's current open positions, one row per outcome token, with net position, net USDC flow, last price, and unrealized PnL. Sort by trades (default), shares, value, or pnl. Supports offset pagination.\n\nCosts 3 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "ApiPolymarketPositionsSortBy": {
+            "enum": [
+              "trades",
+              "shares",
+              "value",
+              "pnl"
+            ],
+            "type": "string"
+          },
+          "CommonSortDir": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "addr": {
+                "description": "Required. Polymarket trade address (0x + 40 hex chars).",
+                "examples": [
+                  "0xBDDF61Af533fF524D27154e589d2D7A81510C684"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "addr"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "default": 50,
+                "description": "Max results (default 50, max 1000).",
+                "examples": [
+                  50
+                ],
+                "maximum": 1000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Offset for pagination (default 0).",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              },
+              "sortBy": {
+                "$ref": "#/$defs/ApiPolymarketPositionsSortBy",
+                "description": "Column to order by: trades (default), shares, value, pnl."
+              },
+              "sortOrder": {
+                "$ref": "#/$defs/CommonSortDir",
+                "description": "Sort direction: asc or desc (default)."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Polymarket user positions"
+      }
+    },
+    {
+      "name": "GetPolymarketTopHolders",
+      "title": "Polymarket market top holders",
+      "description": "Polymarket market top holders\n\nRequires predictions.read and either predictions.explorer or predictions.filter. limit may not exceed the caller's predictions.max_results, counting an omitted limit as its default of 20. Returns the largest position holders for a market, ranked by net position, each with their per-token positions and net USDC flow. Optionally narrow to a single outcome (0 for Yes, 1 for No). Returns 404 when the conditionID has no matching tokens.\n\nCosts 3 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "conditionId": {
+                "description": "Required. Polymarket condition ID for the market.",
+                "examples": [
+                  "0x9be56371f6a29d12769b2f196847ee825b9585ebb8bfa042136be031b081eba1"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "conditionId"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "default": 20,
+                "description": "Max entries to return (1-100). Default: 20.",
+                "examples": [
+                  100
+                ],
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "outcome": {
+                "description": "Optional. 0 for Yes token, 1 for No token. Omit for all tokens.",
+                "examples": [
+                  0
+                ],
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Polymarket market top holders"
+      }
+    },
+    {
+      "name": "GetPolymarketWalletSummaryPnL",
+      "title": "Polymarket wallet PnL summary",
+      "description": "Polymarket wallet PnL summary\n\nRequires predictions.read and either predictions.explorer or predictions.filter. Returns a trade address's total PnL (open-position plus all-time realized), realized PnL, and counts of unique, won, and total markets traded.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "addr": {
+                "description": "Required. Polymarket trade address (0x + 40 hex chars).",
+                "examples": [
+                  "0xBDDF61Af533fF524D27154e589d2D7A81510C684"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "addr"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Polymarket wallet PnL summary"
+      }
+    },
+    {
+      "name": "GetRiskScoreAddress",
+      "title": "Get risk score for an address",
+      "description": "Get risk score for an address\n\nReturns a compliance risk score for the specified blockchain address, including per-category exposure scores and the sources behind them. A risk_level of NONE means no exposure was identified at or above the reporting threshold. The status field indicates whether an address has been scored or yet to be processed. An address that is not valid for a supported chain returns 400.\n\nCosts 5 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The blockchain address to query.",
+                "examples": [
+                  "0x6068A806a62DBb6a42E1A83e17E249bF4f8dB3aB"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "address"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get risk score for an address"
+      }
+    },
+    {
+      "name": "GetRiskScoreEntity",
+      "title": "Get entity-level risk score",
+      "description": "Get entity-level risk score\n\nReturns an entity's aggregated risk score, reflecting both the entity's own flagged addresses and how much of its activity connects to known risk sources. It is an entity-level measure rather than the score of any single address, so an individual address may score higher or lower than its entity. The status field indicates whether the entity has been scored or is yet to be processed. An identifier that no Arkham entity has returns 404.\n\nCosts 5 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "entity_id": {
+                "description": "The Arkham entity identifier to query, for example 'binance'. Identifiers are case-sensitive and must be sent exactly as Arkham reports them; use GET /intelligence/search to look one up.",
+                "examples": [
+                  "binance"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity_id"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get entity-level risk score"
+      }
+    },
+    {
+      "name": "GetSupportedChains",
+      "title": "Get supported chains list",
+      "description": "Get supported chains list\n\nRetrieves a list of supported blockchain chains.\n\nCosts 0 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get supported chains list"
+      }
+    },
+    {
+      "name": "GetSwaps",
+      "title": "Get swaps",
+      "description": "Get swaps\n\nRetrieves a list of swaps (DEX trades) based on various query filters. Requires swaps.read. A single address/entity or token preview additionally requires swaps.explorer or swaps.filter. Previews are in descending time order, with optional chains and an optional usdGte=1. Additional filtering and sorting require swaps.filter. offset + limit may not exceed the caller's swaps.max_results, counting an omitted limit as its default of 20.\n\n**Rate Limit**: This endpoint has a stricter rate limit of 1 request per second.\n\n**Filter forms**: For the filter forms these parameters accept, see the [Param Filters](/usage/filters) guide.\n\nCosts 2 API credits per row.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          },
+          "CommonSortDir": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          },
+          "CommonTransferFlow": {
+            "enum": [
+              "in",
+              "out",
+              "self",
+              "all"
+            ],
+            "type": "string"
+          },
+          "CommonTransferSortKey": {
+            "enum": [
+              "time",
+              "value",
+              "usd"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "base": {
+                "description": "Filter by specific entity or address involved in the swap. Omitting it returns an empty list. Pass several as a single comma-separated value (e.g. 'binance,coinbase').",
+                "examples": [
+                  [
+                    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,solana'). If omitted, returns data across all supported chains."
+              },
+              "counterparties": {
+                "description": "List of addresses or entities to treat strictly as counterparties. Pass several as a single comma-separated value (e.g. 'coinbase,kraken').",
+                "examples": [
+                  [
+                    "binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "flow": {
+                "$ref": "#/$defs/CommonTransferFlow",
+                "description": "Swap direction relative to the base address. Valid values: 'in' (receiving token1), 'out' (sending token0), or 'all'. Defaults to 'all'."
+              },
+              "from": {
+                "description": "Filter to swaps where the base sold one of these tokens (token addresses or token IDs). Combine with 'to' for a specific sold/bought trade. To match a token on either side regardless of direction use 'tokens'; to filter by the transaction parties instead, use senders/receivers. Pass several as a single comma-separated value (e.g. 'ethereum,usd-coin').",
+                "examples": [
+                  [
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results to return. Default: 20. Max: 1650.",
+                "examples": [
+                  20
+                ],
+                "maximum": 1650,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Pagination offset. offset + limit must not exceed 10000 or the caller's swaps.max_results.",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              },
+              "protocols": {
+                "description": "Filter by protocol/DEX addresses or entity IDs. Pass several as a single comma-separated value (e.g. 'uniswap,sushiswap').",
+                "examples": [
+                  [
+                    "uniswap"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "receivers": {
+                "description": "Filter by the transaction parties that received the swap output (receiver addresses or entities). Distinct from 'to', which filters on the bought token. Pass several as a single comma-separated value (e.g. 'binance,coinbase').",
+                "examples": [
+                  [
+                    "0x28C6c06298d514Db089934071355E5743bf21d60"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "senders": {
+                "description": "Filter by the transaction parties that initiated the swap (sender addresses or entities). Distinct from 'from', which filters on the sold token. Pass several as a single comma-separated value (e.g. 'binance,coinbase').",
+                "examples": [
+                  [
+                    "0x28C6c06298d514Db089934071355E5743bf21d60"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "sortDir": {
+                "$ref": "#/$defs/CommonSortDir",
+                "description": "Sort direction: 'asc' (ascending) or 'desc' (descending). Defaults to 'desc'."
+              },
+              "sortKey": {
+                "$ref": "#/$defs/CommonTransferSortKey",
+                "description": "Field by which to sort the results. One of: time, usd."
+              },
+              "timeGte": {
+                "description": "Filter swaps at or after this time (unix ms, unix seconds, RFC3339, or YYYY-MM-DD).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive. It cannot be combined with timeGte or timeLte.",
+                "examples": [
+                  "24h"
+                ],
+                "type": "string"
+              },
+              "timeLte": {
+                "description": "Filter swaps at or before this time (unix ms, unix seconds, RFC3339, or YYYY-MM-DD).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "description": "Filter to swaps where the base bought one of these tokens (token addresses or token IDs). Combine with 'from' for a specific sold/bought trade. Pass several as a single comma-separated value (e.g. 'ethereum,usd-coin').",
+                "examples": [
+                  [
+                    "ethereum"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "tokens": {
+                "description": "List of token addresses or token IDs that appear as either token0 or token1. Pass several as a single comma-separated value (e.g. 'ethereum,0xA0b86991\u2026').",
+                "examples": [
+                  [
+                    "ethereum",
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "usdGte": {
+                "description": "Minimum historical USD value.",
+                "examples": [
+                  "1000"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "usdLte": {
+                "description": "Maximum historical USD value.",
+                "examples": [
+                  "100000"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "value0Gte": {
+                "description": "Minimum token0 amount (decimal-adjusted; matched on absolute value).",
+                "examples": [
+                  "1000"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "value0Lte": {
+                "description": "Maximum token0 amount (decimal-adjusted; matched on absolute value).",
+                "examples": [
+                  "1000000"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "value1Gte": {
+                "description": "Minimum token1 amount (decimal-adjusted; matched on absolute value).",
+                "examples": [
+                  "1"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "value1Lte": {
+                "description": "Maximum token1 amount (decimal-adjusted; matched on absolute value).",
+                "examples": [
+                  "1000"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get swaps"
+      }
+    },
+    {
+      "name": "GetTokenCurrentMarketData",
+      "title": "Get current market data for a token",
+      "description": "Get current market data for a token\n\nReturns current market data for a token including price, market cap, volume, and supply information.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "The CoinGecko pricing ID of the token.",
+                "examples": [
+                  "usd-coin"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get current market data for a token"
+      }
+    },
+    {
+      "name": "GetTokenHistoryFromPricingID",
+      "title": "Get token price history by pricing ID",
+      "description": "Get token price history by pricing ID\n\nReturns historical price data for a token identified by its pricing ID (e.g., 'bitcoin', 'ethereum'). Returns an array of timestamped price quotes.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "The CoinGecko pricing ID of the token.",
+                "examples": [
+                  "usd-coin"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "daily": {
+                "description": "If 'true', returns the full daily price history for the token. Otherwise returns every quote recorded in the last 24 hours.",
+                "examples": [
+                  "true"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get token price history by pricing ID"
+      }
+    },
+    {
+      "name": "GetTokenIntelligenceById",
+      "title": "Get intelligence on a token by CoinGecko pricing ID",
+      "description": "Get intelligence on a token by CoinGecko pricing ID\n\nRetrieve basic token info using the CoinGecko pricing ID (e.g., \"bitcoin\", \"ethereum\").\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "The CoinGecko pricing ID of the token.",
+                "examples": [
+                  "usd-coin"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get intelligence on a token by CoinGecko pricing ID"
+      }
+    },
+    {
+      "name": "GetTokenVolumeByID",
+      "title": "Get volume for a token by pricing ID",
+      "description": "Get volume for a token by pricing ID\n\nReturns exchange flow for the specified token, bucketed by time.\n\nEvery time range uses the same service-wallet definition. Deposits move from non-service wallets into service wallets; withdrawals move from service wallets to non-service wallets. Service-to-service movements are excluded, and there is no top-exchange limit. inUSD and inValue report deposits, while outUSD and outValue report withdrawals, in historical USD and token units respectively. Daily ranges include the current, incomplete UTC day.\n\nFor Bitcoin-family assets, flows use inflow/outflow operations. An operation is excluded if any counterparty is marked as a service.\n\nThis form resolves the token by pricing ID, so it also covers native assets such as Bitcoin and Dogecoin.\n\n**Rate Limit**: This endpoint has a stricter rate limit of 1 request per second.\n\nCosts 3 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "The CoinGecko pricing ID of the token.",
+                "examples": [
+                  "bitcoin"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "granularity": {
+                "description": "Bucket size for the histogram. Use a whole number of hours, from 1h up to 7d (e.g. 1h, 2h, 6h, 12h, 1d, 2d, 3d, 7d); sub-hour values and durations over 7d are rejected. Only applied when timeLast is under 30 days; for longer or omitted ranges, results are always returned in daily buckets.",
+                "examples": [
+                  "1h"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive. Windows under 30 days follow granularity. Windows of 30 days or longer return daily buckets. If omitted, the response covers all time in daily buckets.",
+                "examples": [
+                  "24h"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "granularity"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path",
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get volume for a token by pricing ID"
+      }
+    },
+    {
+      "name": "GetTopTokenFlowByPricingId",
+      "title": "Get top flow for a token by pricing ID",
+      "description": "Get top flow for a token by pricing ID\n\nReturns the top inflows/outflows for the specified token ID, aggregated by address.\n\n**Rate Limit**: This endpoint has a stricter rate limit of 1 request per second.\n\nCosts 10 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "The CoinGecko pricing ID of the token.",
+                "examples": [
+                  "usd-coin"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated string, e.g. 'ethereum,bsc' (not a JSON array). If omitted, returns all supported chains."
+              },
+              "limit": {
+                "default": 50,
+                "description": "Maximum number of addresses to return per flow direction. Default: 50. Max: 100.",
+                "examples": [
+                  5
+                ],
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive.",
+                "examples": [
+                  "24h"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "timeLast"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path",
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get top flow for a token by pricing ID"
+      }
+    },
+    {
+      "name": "GetTopTokenHoldersByChainAddress",
+      "title": "Get top token holders by chain and address",
+      "description": "Get top token holders by chain and address\n\nReturns the top token holders for a specific token contract on a given chain. Results are sorted by balance in descending order.\n\nOnly chains with token contracts (EVM chains, Solana, Tron) are supported here. For UTXO assets like Bitcoin, use the pricing-ID form (/token/holders/{id}).\n\n**Response fields:**\n- **token**: Token metadata (name, symbol, pricing info).\n- **totalSupply**: Total supply for the chain.\n- **addressTopHolders**: Top holders by individual address.\n- **entityTopHolders**: Top holders grouped by entity (only present when groupByEntity=true).\n\n**Note:** Entity objects in the response do not include `populatedTags`. Use `GET /intelligence/entity/{id}` to retrieve tags for individual entities.\n\nCosts 30 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "address": {
+                "description": "The token contract address to query.",
+                "examples": [
+                  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                ],
+                "type": "string"
+              },
+              "chain": {
+                "$ref": "#/$defs/BlockchainChain",
+                "description": "Blockchain network where the token is deployed."
+              }
+            },
+            "required": [
+              "chain",
+              "address"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "groupByEntity": {
+                "description": "If 'true', groups holdings by entity rather than individual addresses.",
+                "examples": [
+                  "true"
+                ],
+                "type": "string"
+              },
+              "limit": {
+                "default": 100,
+                "description": "Maximum number of holders to return per page (default 100, max 100). offset + limit must not exceed 1000.",
+                "examples": [
+                  100
+                ],
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Number of holders to skip for pagination (default 0).",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              },
+              "poolAddress": {
+                "description": "Optional Solana pool address. When provided, address holder unrealized PnL is calculated from this pool only.",
+                "examples": [
+                  "CiLg83sX8nJQMPkRwGMZYcjbgcHxaXsL6XjZre5nmeKn"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get top token holders by chain and address"
+      }
+    },
+    {
+      "name": "GetTopTokenHoldersByID",
+      "title": "Get top token holders by pricing ID",
+      "description": "Get top token holders by pricing ID\n\nReturns the top token holders for a token identified by its CoinGecko pricing ID (e.g. \"bitcoin\", \"ethereum\", \"usd-coin\"). Results are sorted by balance in descending order.\n\n**Response fields:**\n- **token**: Token metadata (name, symbol, pricing info).\n- **totalSupply**: Total supply per chain.\n- **addressTopHolders**: Top holders by individual address, keyed by chain.\n- **entityTopHolders**: Top holders grouped by entity (only present when groupByEntity=true), keyed by chain.\n\n**Note:** Entity objects in the response do not include `populatedTags`. Use `GET /intelligence/entity/{id}` to retrieve tags for individual entities.\n\nCosts 30 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "The CoinGecko pricing ID of the token.",
+                "examples": [
+                  "usd-coin"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "groupByEntity": {
+                "description": "If 'true', groups holdings by entity rather than individual addresses.",
+                "examples": [
+                  "true"
+                ],
+                "type": "string"
+              },
+              "limit": {
+                "default": 100,
+                "description": "Maximum number of holders to return per page (default 100, max 100). offset + limit must not exceed 1000.",
+                "examples": [
+                  100
+                ],
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Number of holders to skip for pagination (default 0).",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              },
+              "poolAddress": {
+                "description": "Optional Solana pool address. When provided, address holder unrealized PnL is calculated from this pool only.",
+                "examples": [
+                  "CiLg83sX8nJQMPkRwGMZYcjbgcHxaXsL6XjZre5nmeKn"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get top token holders by pricing ID"
+      }
+    },
+    {
+      "name": "GetTransaction",
+      "title": "Get transaction details",
+      "description": "Get transaction details\n\nRetrieves detailed information about a specific blockchain transaction using its hash.\n\nThe endpoint searches across all supported chains to find the transaction. If it is not found in confirmed transactions, it also checks the mempool for pending transactions.\n\n**Hash format.** Write the hash as its chain does: `0x`-prefixed hex on EVM chains and HyperCore, bare hex on Tron and the UTXO chains, and a base58 signature on Solana. A hash written in another chain's format is not looked up on the chains that write it differently.\n\n**Response shape.** The response body is a JSON object keyed by chain identifier (for example \"ethereum\"). Because the same hash format can appear on more than one chain, the object may contain more than one entry, one per chain on which the transaction was found. Each value holds that chain's transaction details. The exact set of fields varies by chain, but consumers can generally expect:\n\n- the block number and block timestamp the transaction was included in,\n- the sender and recipient addresses,\n- gas used and gas-related fields, along with the transaction fee,\n- the value transferred in native units and its USD value at the time,\n- token details for any tokens involved in the transfer,\n- for a HyperEVM transaction, `hypercoreActions`: the HyperCore actions on record that it drove through CoreWriter, in execution order, each with the HyperCore block and time it executed in, the account it acted for, and the raw action; omitted when none is on record.\n- `bridges`: the cross-chain bridges the transaction is one leg of, each with its protocol, status, and a `source` and `destination` leg naming the chain, address, token and amount at either end. A bridge is listed on both the transaction that paid into it and the transaction it paid out, so either hash finds it, and `id` is the same on both. One transaction can carry several bridges, such as a batch settlement; at most 100 are listed. Omitted when the transaction is part of no bridge. Protocols covered: Relay, Across, deBridge, Unit, Circle CCTP and Gateway, LayerZero, Stargate, THORChain and Maya.\n\n**Not found.** If the hash is not found on any supported chain (neither confirmed nor pending), the endpoint returns 404.\n\nCosts 2 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "additionalProperties": false,
+            "properties": {
+              "hash": {
+                "description": "The transaction hash to look up.",
+                "examples": [
+                  "0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "hash"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get transaction details"
+      }
+    },
+    {
+      "name": "GetTransfers",
+      "title": "Get transfers",
+      "description": "Get transfers\n\nRetrieves a list of transfers based on various query filters.\n\n**Transfer access:** Requires transfers.read. Without transfers.filter, the default feed is descending by time, with no filters except chains and an optional usdGte=1. transfers.explorer additionally permits one address or entity as base, or base=all with one token. Combining a specific base and token, or changing other filters or sorting, requires transfers.filter. Full filtering includes explorer queries. Separately, offset + limit may not exceed the caller's transfers.max_results, counting an omitted limit as its default of 20. Logged-out access comes from the anonymous plan over the default plan; its initial grants permit only the default feed's first 50 results. A missing capability or a request past transfers.max_results returns 401 for logged-out callers or 403 for authenticated callers.\n\n**Rate Limit**: This endpoint has a stricter rate limit of 1 request per second.\n\n**Sequence ranges:** Every chain numbers its transfers as they are indexed, and `includeCursors=true` reports each chain's latest number. Pass **seqGte** and **seqLte** to fetch one chain's transfers between two of those numbers \u2014 for example, to poll incrementally without missing or repeating a transfer by walking from the last sequence you saw to the latest one reported. A sequence range needs exactly one chain, one whose transfers carry sequences, and may span at most 10,000,000 sequences; a range spanning more is walked in segments, the last of them ending at the chain's reported number. A range must end at or below that number \u2014 a **seqLte** beyond it is rejected, because the transfers up to it are not all searchable yet, and a chain reporting no number yet accepts no range at all. Sequences begin when a chain's numbering was introduced, so older transfers carry no **seq** and ranges below the earliest sequenced transfer return nothing. It cannot be combined with **timeLast**, which moves with the clock \u2014 use **timeGte** and **timeLte**. A sequence range comes back in ascending sequence order and so cannot be combined with **sortKey** or **sortDir**, and every transfer in it carries its own **seq**. That is how you page a range: a response with fewer than **limit** transfers has completed it, and a full one is continued by repeating the request with **seqGte** set to the last transfer's **seq** plus one. **count** is capped and does not report whether any of the range remains.\n\n**Real-time streaming:** For live transfer notifications instead of polling, use the WebSocket API. See GET /ws/transfers for real-time streaming with transfer filtering. Service-wallet selectors are supported on the HTTP transfer endpoints only.\n\n**Filter forms**: For the filter forms these parameters accept, see the [Param Filters](/usage/filters) guide.\n\nCosts 2 API credits per row.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          },
+          "CommonSortDir": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          },
+          "CommonTransferFlow": {
+            "enum": [
+              "in",
+              "out",
+              "self",
+              "all"
+            ],
+            "type": "string"
+          },
+          "CommonTransferSortKey": {
+            "enum": [
+              "time",
+              "value",
+              "usd"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "base": {
+                "description": "Filter from or to any of these entities or addresses. Prefix a value with '!' to exclude it, or 'type:' to filter by entity type, so 'type:cex,!binance' returns all exchanges except binance. Pass several as a single comma-separated value (e.g. 'binance,coinbase').",
+                "examples": [
+                  [
+                    "binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns transfers across all supported chains."
+              },
+              "counterparties": {
+                "description": "list of addresses or entities to treat strictly as counterparties (only base <-> counterparty transfers). Pass several as a single comma-separated value (e.g. 'coinbase,kraken').",
+                "examples": [
+                  [
+                    "binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "flow": {
+                "$ref": "#/$defs/CommonTransferFlow",
+                "description": "Transfer direction: 'in' (incoming), 'out' (outgoing), 'self' (self-transfers), or 'all'. Default: all."
+              },
+              "from": {
+                "description": "Filter from any of these addresses, entities, deposit services, or service wallets. Prefix a value with '!' to exclude it, 'type:' to filter on entity types (such as 'type:cex'), 'deposit:' to filter on deposit addresses (such as 'deposit:binance'), or 'service:' for service wallets (such as 'service:binance' or 'service:all'). Service-wallet filters support EVM, Tron, and Solana; omit chains to search those chains, or specify only supported chains. Positive values are alternatives (OR). Pass several as a single comma-separated value (e.g. '0xd8dA6BF2\u2026,deposit:binance').",
+                "examples": [
+                  [
+                    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "deposit:binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "includeCursors": {
+                "description": "Include per-chain as-of cursors in the response. Default: false.",
+                "type": "boolean"
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results to return. Default: 20. Max: 1650.",
+                "examples": [
+                  10
+                ],
+                "maximum": 1650,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Pagination offset. Default: 0. offset + limit must not exceed 10000 or the caller's transfers.max_results.",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              },
+              "seqGte": {
+                "description": "Return transfers at or after this chain sequence, as reported in cursors and on each returned transfer. Requires seqLte and exactly one chain, and only chains whose transfers carry sequences are supported. Sequences begin when a chain's numbering was introduced; parts of a range below the earliest sequenced transfer return nothing.",
+                "examples": [
+                  454726633
+                ],
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "seqLte": {
+                "description": "Return transfers at or before this chain sequence. Requires seqGte, and the range may span at most 10,000,000 sequences. Must be at or below the chain's latest sequence as reported by includeCursors; a higher value is rejected, as is any range on a chain that reports no sequence yet. A sequence range cannot be combined with timeLast; use timeGte and timeLte.",
+                "examples": [
+                  454726733
+                ],
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "sortDir": {
+                "$ref": "#/$defs/CommonSortDir",
+                "description": "Direction for sorting results. Default: desc."
+              },
+              "sortKey": {
+                "$ref": "#/$defs/CommonTransferSortKey",
+                "description": "Field by which to sort the results. Default: time. Custom sorting requires transfers.filter; previews are sorted by time, descending."
+              },
+              "timeGte": {
+                "description": "Filter after a specific time (RFC3339, YYYY-MM-DD, or Unix timestamp).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive. It cannot be combined with timeGte or timeLte.",
+                "examples": [
+                  "24h"
+                ],
+                "type": "string"
+              },
+              "timeLte": {
+                "description": "Filter before a specific time (RFC3339, YYYY-MM-DD, or Unix timestamp).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "description": "Filter to any of these addresses, entities, deposit services, or service wallets. Prefix a value with '!' to exclude it, 'type:' to filter on entity types (such as 'type:cex'), 'deposit:' to filter on deposit addresses (such as 'deposit:binance'), or 'service:' for service wallets (such as 'service:binance' or 'service:all'). Service-wallet filters support EVM, Tron, and Solana; omit chains to search those chains, or specify only supported chains. Positive values are alternatives (OR). Pass several as a single comma-separated value (e.g. '0xd8dA6BF2\u2026,deposit:binance').",
+                "examples": [
+                  [
+                    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "deposit:binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "tokens": {
+                "description": "Filter involving any of these token addresses or token IDs. Pass several as a single comma-separated value (e.g. 'ethereum,0xA0b86991\u2026').",
+                "examples": [
+                  [
+                    "ethereum",
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "usdGte": {
+                "description": "Filter above a minimum historical USD value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "usdLte": {
+                "description": "Filter below a maximum historical USD value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "valueGte": {
+                "description": "Filter above a minimum token amount (the quantity of tokens, not the USD value).",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "valueLte": {
+                "description": "Filter below a maximum token amount (the quantity of tokens, not the USD value).",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get transfers"
+      }
+    },
+    {
+      "name": "GetTransfersHistogram",
+      "title": "Get a detailed histogram of transfers (API Only)",
+      "description": "Get a detailed histogram of transfers (API Only)\n\nReturns an aggregated histogram of transfers over time, bucketed by `granularity`. Each bucket carries the transfer count and the total historical USD value, and its `time` is the start of the bucket.\n\n**Bucket alignment.** Buckets start on the granularity boundary: 30-minute buckets at 12:00, 12:30, and so on. `bucketOffset` moves every boundary by a duration, so `granularity=30m&bucketOffset=-60s` gives buckets starting at 11:59, 12:29, 12:59, each reported at its shifted start. This lets a caller that acts on the half hour read a bucket that closed a minute before it, once every transfer in it has been indexed. A shifted histogram is accepted only with a granularity of 1h or finer over a range of at most 30 days, so it stays fast for any base. The time filter is applied to transfers, not buckets: a `timeGte` or `timeLte` inside a bucket returns that bucket with only the transfers in range, and `timeLte` is inclusive, so end a range one second before the next bucket starts to keep it out.\n\n**Requires an API key** (browser-session and anonymous access are not permitted).\n\n**A `base` filter is required.** Without one, the response is an empty list. With `base=all`, add at least one more filter (time range, `from`/`to`, token, or USD or value bound); `type:` (except `type:shielded`) and `!` values do not count.\n\n**Filtering** uses the same filter parameters as GET /transfers. The response is the complete aggregation over the filtered range \u2014 there is no pagination or sorting. Periods with no matching transfers are omitted, so buckets are not necessarily contiguous.\n\nA fine `granularity` over a long range can cover more periods than can be aggregated, which is answered with a 400: use a coarser granularity, or narrow the range with `timeGte` and `timeLte`.\n\n**Rate Limit**: This endpoint has a stricter rate limit of 1 request per second.\n\n**Filter forms**: For the filter forms these parameters accept, see the [Param Filters](/usage/filters) guide.\n\nCosts 4 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          },
+          "CommonTransferFlow": {
+            "enum": [
+              "in",
+              "out",
+              "self",
+              "all"
+            ],
+            "type": "string"
+          },
+          "ElasticdbGranularity": {
+            "enum": [
+              "1h",
+              "1d",
+              "1m",
+              "5m",
+              "15m",
+              "30m",
+              "2h",
+              "4h",
+              "6h",
+              "12h",
+              "1w",
+              "1M",
+              "1q",
+              "1y"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "base": {
+                "description": "Filter from or to any of these entities or addresses. Prefix a value with '!' to exclude it, or 'type:' to filter by entity type, so 'type:cex,!binance' returns all exchanges except binance. Pass several as a single comma-separated value (e.g. 'binance,coinbase').",
+                "examples": [
+                  [
+                    "binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "bucketOffset": {
+                "description": "Shift every bucket boundary by this duration, for example '-60s' or '-1m'. Buckets normally start on the granularity boundary (12:00, 12:30, ...); with a 30m granularity and a -60s offset they start at 11:59, 12:29, ... and each bucket's time reports where it starts. Default: no shift.",
+                "examples": [
+                  "-60s"
+                ],
+                "type": "string"
+              },
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns transfers across all supported chains."
+              },
+              "counterparties": {
+                "description": "list of addresses or entities to treat strictly as counterparties (only base <-> counterparty transfers). Pass several as a single comma-separated value (e.g. 'coinbase,kraken').",
+                "examples": [
+                  [
+                    "binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "flow": {
+                "$ref": "#/$defs/CommonTransferFlow",
+                "description": "Transfer direction: 'in' (incoming), 'out' (outgoing), 'self' (self-transfers), or 'all'. Default: all."
+              },
+              "from": {
+                "description": "Filter from any of these addresses, entities, deposit services, or service wallets. Prefix a value with '!' to exclude it, 'type:' to filter on entity types (such as 'type:cex'), 'deposit:' to filter on deposit addresses (such as 'deposit:binance'), or 'service:' for service wallets (such as 'service:binance' or 'service:all'). Service-wallet filters support EVM, Tron, and Solana; omit chains to search those chains, or specify only supported chains. Positive values are alternatives (OR). Pass several as a single comma-separated value (e.g. '0xd8dA6BF2\u2026,deposit:binance').",
+                "examples": [
+                  [
+                    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "deposit:binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "granularity": {
+                "$ref": "#/$defs/ElasticdbGranularity",
+                "description": "Histogram bucket size. Calendar units: '1m' (minute), '1h' (hour), '1d' (day), '1w' (week), '1M' (month), '1q' (quarter), '1y' (year). Fixed widths: '5m', '15m', '30m', '2h', '4h', '6h', '12h'. Note that '1m' is a minute and '1M' is a month."
+              },
+              "timeGte": {
+                "description": "Filter after a specific time (RFC3339, YYYY-MM-DD, or Unix timestamp).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive. It cannot be combined with timeGte or timeLte.",
+                "examples": [
+                  "24h"
+                ],
+                "type": "string"
+              },
+              "timeLte": {
+                "description": "Filter before a specific time (RFC3339, YYYY-MM-DD, or Unix timestamp).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "description": "Filter to any of these addresses, entities, deposit services, or service wallets. Prefix a value with '!' to exclude it, 'type:' to filter on entity types (such as 'type:cex'), 'deposit:' to filter on deposit addresses (such as 'deposit:binance'), or 'service:' for service wallets (such as 'service:binance' or 'service:all'). Service-wallet filters support EVM, Tron, and Solana; omit chains to search those chains, or specify only supported chains. Positive values are alternatives (OR). Pass several as a single comma-separated value (e.g. '0xd8dA6BF2\u2026,deposit:binance').",
+                "examples": [
+                  [
+                    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "deposit:binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "tokens": {
+                "description": "Filter involving any of these token addresses or token IDs. Pass several as a single comma-separated value (e.g. 'ethereum,0xA0b86991\u2026').",
+                "examples": [
+                  [
+                    "ethereum",
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "usdGte": {
+                "description": "Filter above a minimum historical USD value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "usdLte": {
+                "description": "Filter below a maximum historical USD value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "valueGte": {
+                "description": "Filter above a minimum token amount (the quantity of tokens, not the USD value).",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "valueLte": {
+                "description": "Filter below a maximum token amount (the quantity of tokens, not the USD value).",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "granularity"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get a detailed histogram of transfers (API Only)"
+      }
+    },
+    {
+      "name": "GetTrendingTokens",
+      "title": "Get trending tokens",
+      "description": "Get trending tokens\n\nReturns a list of currently trending tokens across multiple chains.\n\nCosts 1 API credits per call.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get trending tokens"
+      }
+    },
+    {
+      "name": "GetUnenrichedTransfers",
+      "title": "Get unenriched transfers",
+      "description": "Get unenriched transfers\n\nRetrieves a list of transfers based on the same query filters as GET /transfers, but returns raw addresses without Arkham address intelligence.\n\nToken and transaction metadata are still included. Transfer counterparties are returned as plain addresses, without Arkham entities, labels, deposit services, or predicted entities.\n\n**Filter forms**: For the filter forms these parameters accept, see the [Param Filters](/usage/filters) guide.\n\nCosts 1 API credits per row.",
+      "inputSchema": {
+        "$defs": {
+          "BlockchainChain": {
+            "enum": [
+              "ethereum",
+              "polygon",
+              "bsc",
+              "optimism",
+              "avalanche",
+              "arbitrum_one",
+              "base",
+              "bitcoin",
+              "tron",
+              "flare",
+              "solana",
+              "dogecoin",
+              "zcash",
+              "hyperevm",
+              "hypercore",
+              "robinhood"
+            ],
+            "type": "string"
+          },
+          "BlockchainChains": {
+            "examples": [
+              [
+                "ethereum",
+                "bsc",
+                "polygon"
+              ]
+            ],
+            "items": {
+              "$ref": "#/$defs/BlockchainChain"
+            },
+            "type": "array"
+          },
+          "CommonSortDir": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string"
+          },
+          "CommonTransferFlow": {
+            "enum": [
+              "in",
+              "out",
+              "self",
+              "all"
+            ],
+            "type": "string"
+          },
+          "CommonTransferSortKey": {
+            "enum": [
+              "time",
+              "value",
+              "usd"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "base": {
+                "description": "Filter from or to any of these entities or addresses. Prefix a value with '!' to exclude it, or 'type:' to filter by entity type, so 'type:cex,!binance' returns all exchanges except binance. Pass several as a single comma-separated value (e.g. 'binance,coinbase').",
+                "examples": [
+                  [
+                    "binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "chains": {
+                "$ref": "#/$defs/BlockchainChains",
+                "description": "Chains to filter by, as a single comma-separated value (e.g. 'ethereum,bsc'). If omitted, returns transfers across all supported chains."
+              },
+              "counterparties": {
+                "description": "list of addresses or entities to treat strictly as counterparties (only base <-> counterparty transfers). Pass several as a single comma-separated value (e.g. 'coinbase,kraken').",
+                "examples": [
+                  [
+                    "binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "flow": {
+                "$ref": "#/$defs/CommonTransferFlow",
+                "description": "Transfer direction: 'in' (incoming), 'out' (outgoing), 'self' (self-transfers), or 'all'. Default: all."
+              },
+              "from": {
+                "description": "Filter from any of these addresses, entities, deposit services, or service wallets. Prefix a value with '!' to exclude it, 'type:' to filter on entity types (such as 'type:cex'), 'deposit:' to filter on deposit addresses (such as 'deposit:binance'), or 'service:' for service wallets (such as 'service:binance' or 'service:all'). Service-wallet filters support EVM, Tron, and Solana; omit chains to search those chains, or specify only supported chains. Positive values are alternatives (OR). Pass several as a single comma-separated value (e.g. '0xd8dA6BF2\u2026,deposit:binance').",
+                "examples": [
+                  [
+                    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "deposit:binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "includeCursors": {
+                "description": "Include per-chain as-of cursors in the response. Default: false.",
+                "type": "boolean"
+              },
+              "limit": {
+                "default": 20,
+                "description": "Maximum number of results to return. Default: 20. Max: 1650.",
+                "examples": [
+                  10
+                ],
+                "maximum": 1650,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Pagination offset. Default: 0. offset + limit must not exceed 10000 or the caller's transfers.max_results.",
+                "examples": [
+                  0
+                ],
+                "minimum": 0,
+                "type": "integer"
+              },
+              "seqGte": {
+                "description": "Return transfers at or after this chain sequence, as reported in cursors and on each returned transfer. Requires seqLte and exactly one chain, and only chains whose transfers carry sequences are supported. Sequences begin when a chain's numbering was introduced; parts of a range below the earliest sequenced transfer return nothing.",
+                "examples": [
+                  454726633
+                ],
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "seqLte": {
+                "description": "Return transfers at or before this chain sequence. Requires seqGte, and the range may span at most 10,000,000 sequences. Must be at or below the chain's latest sequence as reported by includeCursors; a higher value is rejected, as is any range on a chain that reports no sequence yet. A sequence range cannot be combined with timeLast; use timeGte and timeLte.",
+                "examples": [
+                  454726733
+                ],
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "sortDir": {
+                "$ref": "#/$defs/CommonSortDir",
+                "description": "Direction for sorting results. Default: desc."
+              },
+              "sortKey": {
+                "$ref": "#/$defs/CommonTransferSortKey",
+                "description": "Field by which to sort the results. Default: time. Custom sorting requires transfers.filter; previews are sorted by time, descending."
+              },
+              "timeGte": {
+                "description": "Filter after a specific time (RFC3339, YYYY-MM-DD, or Unix timestamp).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeLast": {
+                "description": "A relative window that ends now. Write it as a number and one unit, such as 1m, 15m, 24h, 7d or 1M. Units are case-sensitive. It cannot be combined with timeGte or timeLte.",
+                "examples": [
+                  "24h"
+                ],
+                "type": "string"
+              },
+              "timeLte": {
+                "description": "Filter before a specific time (RFC3339, YYYY-MM-DD, or Unix timestamp).",
+                "examples": [
+                  "2024-01-01T00:00:00Z"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "description": "Filter to any of these addresses, entities, deposit services, or service wallets. Prefix a value with '!' to exclude it, 'type:' to filter on entity types (such as 'type:cex'), 'deposit:' to filter on deposit addresses (such as 'deposit:binance'), or 'service:' for service wallets (such as 'service:binance' or 'service:all'). Service-wallet filters support EVM, Tron, and Solana; omit chains to search those chains, or specify only supported chains. Positive values are alternatives (OR). Pass several as a single comma-separated value (e.g. '0xd8dA6BF2\u2026,deposit:binance').",
+                "examples": [
+                  [
+                    "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "deposit:binance"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "tokens": {
+                "description": "Filter involving any of these token addresses or token IDs. Pass several as a single comma-separated value (e.g. 'ethereum,0xA0b86991\u2026').",
+                "examples": [
+                  [
+                    "ethereum",
+                    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                  ]
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "usdGte": {
+                "description": "Filter above a minimum historical USD value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "usdLte": {
+                "description": "Filter below a maximum historical USD value.",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "valueGte": {
+                "description": "Filter above a minimum token amount (the quantity of tokens, not the USD value).",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "valueLte": {
+                "description": "Filter below a maximum token amount (the quantity of tokens, not the USD value).",
+                "examples": [
+                  "100.23"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Get unenriched transfers"
+      }
+    },
+    {
+      "name": "IntelligenceSearchHandler",
+      "title": "Search addresses, entities, tokens, and pools",
+      "description": "Search addresses, entities, tokens, and pools\n\nFull-text search across addresses, entities, tokens, and Solana pools. Returns matching results ranked by relevance.\n\nCosts 30 API credits per call.",
+      "inputSchema": {
+        "$defs": {
+          "IntelligenceSearchFilterLimits": {
+            "properties": {
+              "arkhamAddresses": {
+                "description": "Max Arkham-curated addresses with labels to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "arkhamEntities": {
+                "description": "Max Arkham-curated entities to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "ens": {
+                "description": "Max ENS primary names to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "fomo": {
+                "description": "Max Fomo usernames to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "opensea": {
+                "description": "Max OpenSea usernames to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "polymarketEvents": {
+                "description": "Max Polymarket prediction events to return (0\u201350). Defaults to 0 (disabled).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "pools": {
+                "description": "Max Solana pools to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "pumpfun": {
+                "description": "Max pump.fun usernames to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "services": {
+                "description": "Max CEX/VASP entities to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "tags": {
+                "description": "Max tag matches to return (0\u201350). Defaults to 0 (disabled).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "tokens": {
+                "description": "Max tokens to return (0\u201350).",
+                "examples": [
+                  10
+                ],
+                "type": "integer"
+              },
+              "twitter": {
+                "description": "Max entities matched by Twitter handle to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "types": {
+                "description": "Max entity-type matches to return (0\u201350).",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "userAddresses": {
+                "description": "Max user-defined addresses with labels to return (0\u201350). Requires authentication.",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              },
+              "userEntities": {
+                "description": "Max user-defined entities to return (0\u201350). Requires authentication.",
+                "examples": [
+                  5
+                ],
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "IntelligenceSearchFilterOffsets": {
+            "properties": {
+              "arkhamAddresses": {
+                "description": "Skip the first N Arkham addresses with labels (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "arkhamEntities": {
+                "description": "Skip the first N Arkham entities (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "ens": {
+                "description": "Skip the first N ENS names (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "fomo": {
+                "description": "Skip the first N Fomo usernames (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "opensea": {
+                "description": "Skip the first N OpenSea usernames (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "polymarketEvents": {
+                "description": "Skip the first N Polymarket events (0\u2013500). Polymarket wallet matches are not paged.",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "pools": {
+                "description": "Skip the first N pools (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "pumpfun": {
+                "description": "Skip the first N pump.fun usernames (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "services": {
+                "description": "Skip the first N CEX/VASP entities (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "tags": {
+                "description": "Skip the first N tag matches (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "tokens": {
+                "description": "Skip the first N tokens (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "twitter": {
+                "description": "Skip the first N Twitter matches (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "types": {
+                "description": "Skip the first N entity-type matches (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "userAddresses": {
+                "description": "Skip the first N user addresses with labels (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              },
+              "userEntities": {
+                "description": "Skip the first N user entities (0\u2013500).",
+                "examples": [
+                  0
+                ],
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "additionalProperties": false,
+            "properties": {
+              "arkhamAddresses": {
+                "description": "Max Arkham-curated addresses with labels to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "arkhamAddressesOffset": {
+                "description": "Skip the first N Arkham addresses with labels (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "arkhamEntities": {
+                "description": "Max Arkham-curated entities to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "arkhamEntitiesOffset": {
+                "description": "Skip the first N Arkham entities (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "context": {
+                "description": "Search context for best matches. Defaults to general.",
+                "enum": [
+                  "general",
+                  "predictions",
+                  "dex"
+                ],
+                "type": "string"
+              },
+              "ens": {
+                "description": "Max ENS primary names to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "ensOffset": {
+                "description": "Skip the first N ENS names (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "filterLimits": {
+                "$ref": "#/$defs/IntelligenceSearchFilterLimits",
+                "description": "(Legacy. Prefer flat parameters such as arkhamAddresses=50.) URL-encoded JSON object specifying maximum results per category. Each value is capped at 50; defaults to 5 per category. Flat parameters, when provided, override values in this object."
+              },
+              "filterOffsets": {
+                "$ref": "#/$defs/IntelligenceSearchFilterOffsets",
+                "description": "(Legacy. Prefer flat parameters such as arkhamAddressesOffset=10.) URL-encoded JSON object specifying pagination offset per category. Each value is capped at 500; defaults to 0 per category. Flat parameters, when provided, override values in this object."
+              },
+              "fomo": {
+                "description": "Max Fomo usernames to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "fomoOffset": {
+                "description": "Skip the first N Fomo usernames (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "opensea": {
+                "description": "Max OpenSea usernames to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "openseaOffset": {
+                "description": "Skip the first N OpenSea usernames (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "polymarketEvents": {
+                "description": "Max Polymarket prediction events to return (0\u201350, default 0). Also enables the predictions-wallet match for address queries.",
+                "type": "integer"
+              },
+              "pools": {
+                "description": "Max Solana pools to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "poolsOffset": {
+                "description": "Skip the first N pools (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "pumpfun": {
+                "description": "Max pump.fun usernames to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "pumpfunOffset": {
+                "description": "Skip the first N pump.fun usernames (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "query": {
+                "description": "Search query string to match against entities, addresses, tokens, pools, ENS names, and more. An empty query returns no results.",
+                "examples": [
+                  "binance"
+                ],
+                "type": "string"
+              },
+              "services": {
+                "description": "Max CEX/VASP entities to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "servicesOffset": {
+                "description": "Skip the first N CEX/VASP entities (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "tags": {
+                "description": "Max tag matches to return (0\u201350, default 0).",
+                "type": "integer"
+              },
+              "tagsOffset": {
+                "description": "Skip the first N tag matches (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "tokens": {
+                "description": "Max tokens to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "tokensOffset": {
+                "description": "Skip the first N tokens (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "twitter": {
+                "description": "Max Twitter-handle matches to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "twitterOffset": {
+                "description": "Skip the first N Twitter matches (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "types": {
+                "description": "Max entity-type matches to return (0\u201350, default 5).",
+                "type": "integer"
+              },
+              "typesOffset": {
+                "description": "Skip the first N entity-type matches (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "userAddresses": {
+                "description": "Max user-defined addresses with labels to return (0\u201350, default 5). Requires authentication.",
+                "type": "integer"
+              },
+              "userAddressesOffset": {
+                "description": "Skip the first N user addresses with labels (0\u2013500, default 0).",
+                "type": "integer"
+              },
+              "userEntities": {
+                "description": "Max user-defined entities to return (0\u201350, default 5). Requires authentication.",
+                "type": "integer"
+              },
+              "userEntitiesOffset": {
+                "description": "Skip the first N user entities (0\u2013500, default 0).",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "readOnlyHint": true,
+        "title": "Search addresses, entities, tokens, and pools"
+      }
+    }
+  ]
+}
