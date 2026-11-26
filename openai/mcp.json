@@ -3,7 +3,7 @@
   "mcpServers": {
     "arkham": {
       "type": "streamable-http",
-      "url": "https://mcp.arkm.com/mcp/core",
+      "url": "https://mcp.arkm.com/mcp",
       "extensions": {
         "com.openai": {
           "auth": {

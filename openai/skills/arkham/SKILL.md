@@ -5,7 +5,7 @@ description: Answer questions about blockchain wallets, entities, transfers, tok
 
 # Arkham
 
-Arkham attributes blockchain addresses to real-world entities, such as exchanges, funds and market makers, and serves balances, transfers and market data for them. The Arkham tools are read-only.
+Arkham attributes blockchain addresses to real-world entities, such as exchanges, funds and market makers, and serves balances, transfers and market data for them. Most Arkham tools only look things up. A few manage the user's own alerts, labels, private entities and live transfer streams: use those only when the user asks for that change.
 
 ## Finding the right tool
 

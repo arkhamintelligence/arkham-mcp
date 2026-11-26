@@ -5,7 +5,7 @@ This directory is Arkham's submission package for OpenAI's plugin directory, whi
 | File | Purpose |
 | --- | --- |
 | `plugin.json` | Listing copy, links, starter prompts, logo, and the review test cases (5 the plugin handles, 3 it declines) |
-| `mcp.json` | The server: `https://mcp.arkm.com/mcp/core`, the read-only core catalog, signed in with OAuth through dynamic client registration |
+| `mcp.json` | The server: `https://mcp.arkm.com/mcp`, every tool, signed in with OAuth through dynamic client registration. OpenAI keeps an existing app's MCP URL fixed, and this app was registered with `/mcp`. |
 | `skills/arkham/SKILL.md` | Onboarding skill: which tool answers which question, keeping calls small, and what the plugin declines |
 | `assets/` | The logo, also used as the composer icon |
 
@@ -21,7 +21,7 @@ The submission must come from an owner of Arkham's OpenAI organization, or a mem
    ```
 
 3. Upload the ZIP at platform.openai.com, under the plugin directory's submission page, and complete the dashboard steps:
-   - **With MCP:** connect `https://mcp.arkm.com/mcp/core` and run the tool scan.
+   - **With MCP:** rescan `https://mcp.arkm.com/mcp`.
    - **Domain verification:** `https://mcp.arkm.com/.well-known/openai-apps-challenge` already serves Arkham's token.
    - **Review details:** the reviewer account's credentials. OpenAI rejects them in the ZIP, and the account must sign in without MFA or emailed codes.
 4. Run each positive test case with the reviewer account, then submit for review.
