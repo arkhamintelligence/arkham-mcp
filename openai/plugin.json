@@ -1,0 +1,86 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "arkham",
+  "version": "1.0.5",
+  "description": "Ask who is behind any wallet, how money moved, and what an entity holds. Arkham attributes on-chain activity to real-world entities (exchanges, funds, market makers, individuals) across 16 chains, including Ethereum, Bitcoin, Solana, Tron and Base. This plugin gives ChatGPT and Codex Arkham's intelligence directly: addresses, entities, balances, transfers, tokens, risk scores, HyperCore positions and Polymarket data.",
+  "author": { "name": "Arkham Intelligence", "email": "api@arkm.com", "url": "https://arkm.com" },
+  "homepage": "https://arkm.com",
+  "repository": "https://github.com/arkhamintelligence/arkham-mcp",
+  "license": "MIT",
+  "keywords": ["blockchain", "crypto", "onchain", "wallet", "address", "token", "transfers", "polymarket", "arkham"],
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/arkham/SKILL.md",
+      "interface": {
+        "displayName": "Arkham",
+        "shortDescription": "On-chain intelligence",
+        "longDescription": "Arkham connects ChatGPT and Codex to Arkham's blockchain intelligence. Sign in with an Arkham account that has API access, and you can ask questions such as \"Who are Binance's top counterparties on Ethereum this week?\" or \"What does this wallet hold, and who has it been trading with?\"\n\nArkham attributes on-chain activity to real-world entities (exchanges, funds, market makers, individuals) across 16 chains, including Ethereum, Bitcoin, Solana, Tron and Base. The plugin looks up addresses, entities, balances, transfers, transactions, counterparties, tokens, risk scores, Hyperliquid (HyperCore) positions and Polymarket data.\n\nThe plugin never moves funds or places trades. Besides looking things up, it can manage your own Arkham alerts, labels, private entities and live transfer streams when you ask it to.",
+        "developerName": "Arkham Intelligence",
+        "category": "Data & Analytics",
+        "websiteURL": "https://arkm.com",
+        "supportURL": "https://arkm.com/support",
+        "privacyPolicyURL": "https://arkm.com/privacy-policy",
+        "termsOfServiceURL": "https://arkm.com/api-terms-of-service",
+        "defaultPrompt": [
+          "Which chains does Arkham support?",
+          "Who owns 0x28C6c06298d514Db089934071355E5743bf21d60, and what does it hold?",
+          "Who are the top 10 holders of USDC on Ethereum?"
+        ],
+        "composerIcon": "./assets/arkham-icon-dark-512.png",
+        "logo": "./assets/arkham-icon-dark-512.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Lists the blockchains Arkham covers",
+              "prompt": "Which blockchains does Arkham cover?",
+              "tools_triggered": "GetSupportedChains",
+              "expected_behavior": "Lists 16 chains, including Ethereum, Bitcoin, Solana, Tron, Base and Hyperliquid's HyperEVM and HyperCore."
+            },
+            {
+              "description": "Attributes a wallet address to its entity",
+              "prompt": "Who owns 0x28C6c06298d514Db089934071355E5743bf21d60?",
+              "tools_triggered": "GetAddressIntelligence",
+              "expected_behavior": "Identifies the address as a Binance hot wallet on Ethereum."
+            },
+            {
+              "description": "Shows an entity's token balances on one chain",
+              "prompt": "What tokens does Binance hold on Ethereum?",
+              "tools_triggered": "GetEntityBalances",
+              "expected_behavior": "Lists Binance's largest Ethereum token holdings with USD values, led by USDT, WBETH and ETH."
+            },
+            {
+              "description": "Returns a token's current market data",
+              "prompt": "What's the current price and market cap of Ethereum?",
+              "tools_triggered": "GetTokenCurrentMarketData",
+              "expected_behavior": "Returns ETH's current price, market cap, 24-hour volume and circulating supply."
+            },
+            {
+              "description": "Looks up a transaction by hash",
+              "prompt": "Show me transaction 0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060.",
+              "tools_triggered": "GetTransaction",
+              "expected_behavior": "Returns the Ethereum transaction from block 46147 (7 August 2015), sent from thanateros.eth, with its recipient, value and fee."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Trading request: no tool moves funds or places orders, so the app declines and says Arkham can't trade.",
+              "prompt": "Buy 0.5 ETH for me with my Arkham account."
+            },
+            {
+              "description": "Personal information: Arkham attributes wallets to entities and has no personal contact details, so the app declines and may offer the entity attribution instead.",
+              "prompt": "Find the home address and phone number of whoever owns this wallet."
+            },
+            {
+              "description": "Financial advice: no tool predicts prices and the app gives no advice, so it declines and may offer historical price and flow data.",
+              "prompt": "Will Bitcoin go up next week? Should I buy?"
+            }
+          ]
+        },
+        "demo_recording_url": "https://drive.google.com/file/d/1nDKC5p4aNt6rUscGCu-HQPSFqXWAAmpV/view",
+        "commerce": false
+      }
+    }
+  }
+}
