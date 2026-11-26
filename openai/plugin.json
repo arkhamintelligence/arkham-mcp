@@ -1,10 +1,10 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "arkham",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "Ask who is behind any wallet, how money moved, and what an entity holds. Arkham attributes on-chain activity to real-world entities (exchanges, funds, market makers, individuals) across 16 chains, including Ethereum, Bitcoin, Solana, Tron and Base. This plugin gives ChatGPT and Codex Arkham's intelligence directly: addresses, entities, balances, transfers, tokens, risk scores, HyperCore positions and Polymarket data.",
   "author": { "name": "Arkham Intelligence", "email": "api@arkm.com", "url": "https://arkm.com" },
-  "homepage": "https://arkm.com/api/docs",
+  "homepage": "https://arkm.com",
   "repository": "https://github.com/arkhamintelligence/arkham-mcp",
   "license": "MIT",
   "keywords": ["blockchain", "crypto", "onchain", "wallet", "address", "token", "transfers", "polymarket", "arkham"],
@@ -14,11 +14,11 @@
       "interface": {
         "displayName": "Arkham",
         "shortDescription": "On-chain intelligence",
-        "longDescription": "Arkham connects ChatGPT and Codex to Arkham's blockchain intelligence. Sign in with your Arkham account, and you can ask questions such as \"Who are Binance's top counterparties on Ethereum this week?\" or \"What does this wallet hold, and who has it been trading with?\"\n\nArkham attributes on-chain activity to real-world entities (exchanges, funds, market makers, individuals) across 16 chains, including Ethereum, Bitcoin, Solana, Tron and Base. The plugin looks up addresses, entities, balances, transfers, transactions, counterparties, tokens, risk scores, Hyperliquid (HyperCore) positions and Polymarket data.\n\nEvery tool is read-only: the plugin looks things up and never moves funds, places trades or changes your Arkham account. Results come from the same data and API credits as Arkham's API.",
+        "longDescription": "Arkham connects ChatGPT and Codex to Arkham's blockchain intelligence. Sign in with an Arkham account that has API access, and you can ask questions such as \"Who are Binance's top counterparties on Ethereum this week?\" or \"What does this wallet hold, and who has it been trading with?\"\n\nArkham attributes on-chain activity to real-world entities (exchanges, funds, market makers, individuals) across 16 chains, including Ethereum, Bitcoin, Solana, Tron and Base. The plugin looks up addresses, entities, balances, transfers, transactions, counterparties, tokens, risk scores, Hyperliquid (HyperCore) positions and Polymarket data.\n\nEvery tool is read-only: the plugin looks things up and never moves funds, places trades or changes your Arkham account.",
         "developerName": "Arkham Intelligence",
         "category": "Data & Analytics",
         "websiteURL": "https://arkm.com",
-        "supportURL": "https://arkm.com/api/docs#resources/support",
+        "supportURL": "https://arkm.com/support",
         "privacyPolicyURL": "https://arkm.com/privacy-policy",
         "termsOfServiceURL": "https://arkm.com/api-terms-of-service",
         "defaultPrompt": [
