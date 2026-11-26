@@ -36,11 +36,11 @@ You sign in with your Arkham account: the client opens Arkham, you create a key 
 
 To connect with an API key you already have instead of signing in, follow the [MCP Server guide](https://arkm.com/api/docs) for your client.
 
-## Access and credits
+## Access
 
-Using the server needs an Arkham API plan or trial ([Getting Access](https://arkm.com/api/docs)). Tool calls use the same API credits as the REST API, and each tool's description states its price; most lookups cost 5 credits or fewer. Each answer is capped at 4 MiB, so ask for narrow time ranges or fewer results, and use the [API](https://arkm.com/api/docs) for large exports.
+Sign in with an Arkham account that has API access. Each answer is capped at 4 MiB, so ask for narrow time ranges or fewer results, and use the [API](https://arkm.com/api/docs) for large exports.
 
-The tools read data, and write only to your own alerts, labels and private entities. None of them move funds or place trades. The server forwards each tool call's arguments and your key to `api.arkm.com` and keeps no conversation content.
+The tools read data, and write only to your own alerts, labels, private entities and live transfer streams. None of them move funds or place trades. The server forwards each tool call's arguments and your key to `api.arkm.com` and keeps no conversation content.
 
 ## What's in this repository
 
@@ -58,9 +58,11 @@ Every manifest carries the same `version`; bump them together on a release and t
 ## Listings
 
 - Official MCP Registry: [`com.arkm/mcp`](https://registry.modelcontextprotocol.io/v0/servers?search=com.arkm)
+- GitHub MCP Registry: [com.arkm/mcp](https://github.com/mcp/com.arkm/mcp)
 - Glama: [Arkham connector](https://glama.ai/mcp/connectors/com.arkm/mcp)
+- MCP Market: [Arkham](https://mcpmarket.com/server/arkham-1)
 
 ## Support
 
 - API and MCP: [api@arkm.com](mailto:api@arkm.com)
-- Terms: [API terms of service](https://arkm.com/api-terms-of-service) · [Privacy policy](https://info.arkm.com/privacy-policy)
+- Terms: [API terms of service](https://arkm.com/api-terms-of-service) · [Privacy policy](https://arkm.com/privacy-policy)
