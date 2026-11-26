@@ -13,7 +13,7 @@ This directory is Arkham's submission package for OpenAI's plugin directory, whi
 
 The submission must come from an owner of Arkham's OpenAI organization, or a member with Apps Management Write. That organization needs business verification on platform.openai.com first.
 
-1. Set `review.demo_recording_url` in `plugin.json` to a reviewer-accessible link to the demo video.
+1. Check that `review.demo_recording_url` in `plugin.json` still opens the demo video for someone outside Arkham.
 2. Zip this directory with `plugin.json` at the root of the archive, leaving out this README:
 
    ```sh
